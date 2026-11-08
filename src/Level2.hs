@@ -19,9 +19,9 @@ import TypeCheck (Todo)
 -- Оттранслируйте в Haskell варианты в стиле чистого λ-исчисления (по Чёрчу): термы inl,
 -- inr и either. Имя either в Haskell занято стандартной функцией, ваша называется eitherChurch.
 
-inl = todo "2.1 inl"
-inr = todo "2.1 inr"
-eitherChurch = todo "2.1 eitherChurch"
+inl = \x f g -> f x
+inr = \x f g -> g x
+eitherChurch = \f g v -> v f g
 
 
 -- 2.2. Предыдущее число
@@ -31,7 +31,8 @@ eitherChurch = todo "2.1 eitherChurch"
 -- В Haskell это predChurch, а fst и snd в нём — ваши fstChurch и sndChurch.
 -- Ознакомьтесь с тем, как этот код тестируется в test/SpecLevel2.hs.
 
-predChurch = todo "2.2"
+
+predChurch = \n s z -> sndChurch (n (\p -> pair (s (fstChurch p)) (fstChurch p)) (pair z z))
 
 
 -- 2.3. Простые числа
@@ -39,7 +40,12 @@ predChurch = todo "2.2"
 -- Реализуйте проверку числа на простоту.
 
 isPrime :: Integer -> Bool
-isPrime = todo "2.3"
+isPrime n 
+  | n < 2           = False
+  | n == 2          = True
+  | n `mod`  2 == 0 = False
+  | otherwise       = all (\d -> n `mod` d /= 0) (takeWhile (\d -> d * d <= n) [3, 5 ..])
+
 
 
 -- 2.4. Множество как функция
